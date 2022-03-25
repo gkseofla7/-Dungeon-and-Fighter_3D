@@ -45,6 +45,8 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 private:
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -70,6 +72,12 @@ public:
 	UPROPERTY()
 	float time;
 
+	UPROPERTY(VisibleAnywhere)
+		class UStatComponent* Stat;
+
+
+	UPROPERTY(VisibleAnywhere)
+		class UWidgetComponent* HpBar;
 	UPROPERTY()
 		float rot = 0;
 

@@ -9,6 +9,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DFGKAnimInstance.h"
 #include "DrawDebugHelpers.h"
+#include "StatComponent.h"
+#include "Components/WidgetComponent.h"
+#include "DFGKWidget.h"
 // Sets default values
 ADFGhostKnight::ADFGhostKnight()
 {
@@ -56,6 +59,19 @@ ADFGhostKnight::ADFGhostKnight()
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MaxFlySpeed = 600.f;
 
+	Stat = CreateDefaultSubobject<UStatComponent>(TEXT("STAT"));
+
+	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBAR"));
+	HpBar->SetupAttachment(GetMesh());
+	HpBar->SetWidgetSpace(EWidgetSpace::Screen);//2D형식
+	HpBar->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
+
+	static ConstructorHelpers::FClassFinder<UDFGKWidget>UW(TEXT("WidgetBlueprint'/Game/UI/WBP_HpBar.WBP_HpBar_C'"));
+	if (UW.Succeeded())
+	{
+		HpBar->SetWidgetClass(UW.Class);
+		HpBar->SetDrawSize(FVector2D(200.f, 50.f));
+	}
 }
 void ADFGhostKnight::PostInitializeComponents()
 {
@@ -68,6 +84,11 @@ void ADFGhostKnight::PostInitializeComponents()
 		AnimInstance->OnMontageEnded.AddDynamic(this, &ADFGhostKnight::OnAttackMontageEnded);
 		AnimInstance->OnAttackHit.AddUObject(this, &ADFGhostKnight::AttackCheck);
 	}
+	HpBar->InitWidget();//이걸 꼭 추가
+	//Delegate 바인딩 해주는 부분
+	auto HpWidget = Cast<UDFGKWidget>(HpBar->GetUserWidgetObject());
+	if (HpWidget)
+		HpWidget->BindHp(Stat);
 
 }
 // Called when the game starts or when spawned
@@ -104,6 +125,13 @@ void ADFGhostKnight::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ADFGhostKnight::MoveRight);
 	PlayerInputComponent->BindAxis(TEXT("MoveUp"), this, &ADFGhostKnight::MoveUp);
 
+}
+
+float ADFGhostKnight::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Stat->OnAttacked(DamageAmount);
+
+	return DamageAmount;
 }
 
 void ADFGhostKnight::MoveRight(float Value)
@@ -163,13 +191,10 @@ void ADFGhostKnight::AttackCheck()
 {
 	FHitResult HitResult;
 	FCollisionQueryParams Params(NAME_None, false, this);
-	// GetActorForwardVector()이게 지금 문제..
 	
 	float AttackRange = 100.f;
 	float AttackRadius = 50.f;
-	float y_axis = -1.0f;
-	if (rot == 180.0)
-		y_axis = 1.0;
+
 
 	bool bResult = GetWorld()->SweepSingleByChannel(
 		OUT HitResult,
@@ -195,6 +220,9 @@ void ADFGhostKnight::AttackCheck()
 	if (bResult && HitResult.Actor.IsValid())
 	{
 		UE_LOG(LogTemp, Log, TEXT("Hit Actor : %s"), *HitResult.Actor->GetName());
+		FDamageEvent DamageEvent;
+		//피해자
+		HitResult.Actor->TakeDamage(Stat->GetAttack(), DamageEvent, GetController(), this);
 	}
 }
 
