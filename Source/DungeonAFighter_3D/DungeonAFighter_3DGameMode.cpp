@@ -4,7 +4,7 @@
 #include "DungeonAFighter_3DCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "DFGhostKnight.h"
-
+#include "DFGKPlayerController.h"
 ADungeonAFighter_3DGameMode::ADungeonAFighter_3DGameMode()
 {
 	//// set default pawn class to our Blueprinted character
@@ -18,5 +18,6 @@ ADungeonAFighter_3DGameMode::ADungeonAFighter_3DGameMode()
 	{
 		DefaultPawnClass = BP_Char.Class;
 	}
+	PlayerControllerClass = ADFGKPlayerController::StaticClass();
 	//DefaultPawnClass = ADFGhostKnight::StaticClass();
 }

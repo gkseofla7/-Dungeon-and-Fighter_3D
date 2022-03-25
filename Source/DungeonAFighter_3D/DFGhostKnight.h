@@ -19,10 +19,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	/** Called for side to side input */
+
+	virtual void PostInitializeComponents() override;
+
 	void MoveRight(float Val);
 	void MoveUp(float Value);
 
 	void Attack();
+	void AttackCheck();
+
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location);
 
@@ -64,5 +69,8 @@ public:
 		float LeftRightValue = 0;
 	UPROPERTY()
 	float time;
+
+	UPROPERTY()
+		float rot = 0;
 
 };

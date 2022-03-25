@@ -8,10 +8,11 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DFGKAnimInstance.h"
+#include "DrawDebugHelpers.h"
 // Sets default values
 ADFGhostKnight::ADFGhostKnight()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 
@@ -21,10 +22,10 @@ ADFGhostKnight::ADFGhostKnight()
 	{
 		GetMesh()->SetSkeletalMesh(SM.Object);
 	}
-	 //Don't rotate when the controller rotates.
-	bUseControllerRotationPitch = true;
-	bUseControllerRotationYaw = true;
-	bUseControllerRotationRoll = true;
+	//Don't rotate when the controller rotates.
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -46,7 +47,7 @@ ADFGhostKnight::ADFGhostKnight()
 
 
 	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Face in the direction we are moving..
+	GetCharacterMovement()->bOrientRotationToMovement = false; // Face in the direction we are moving.. 왜 true로 돼있지
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->GravityScale = 2.f;
 	GetCharacterMovement()->AirControl = 0.80f;
@@ -56,14 +57,24 @@ ADFGhostKnight::ADFGhostKnight()
 	GetCharacterMovement()->MaxFlySpeed = 600.f;
 
 }
+void ADFGhostKnight::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
 
+
+	AnimInstance = Cast<UDFGKAnimInstance>(GetMesh()->GetAnimInstance());
+	if (AnimInstance)
+	{
+		AnimInstance->OnMontageEnded.AddDynamic(this, &ADFGhostKnight::OnAttackMontageEnded);
+		AnimInstance->OnAttackHit.AddUObject(this, &ADFGhostKnight::AttackCheck);
+	}
+
+}
 // Called when the game starts or when spawned
 void ADFGhostKnight::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AnimInstance = Cast<UDFGKAnimInstance>(GetMesh()->GetAnimInstance());
-	AnimInstance->OnMontageEnded.AddDynamic(this, &ADFGhostKnight::OnAttackMontageEnded);
 	time = GetWorld()->GetTimeSeconds();
 	
 }
@@ -77,6 +88,8 @@ void ADFGhostKnight::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupt
 void ADFGhostKnight::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	//GetController()->SetControlRotation(FRotationMatrix::MakeFromX(FVector(0.f, rot, 0.f)).Rotator());
 	
 }
 
@@ -96,25 +109,32 @@ void ADFGhostKnight::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ADFGhostKnight::MoveRight(float Value)
 {
 	// add movement in that direction
-	float rot = 0;
 	//if (Value == 0)
 	//	return;
-	LeftRightValue = Value;
-	if (Value >= 0)
-		rot = 0.;
-	else
-		rot = 180.;
 
-	GetMesh()->SetRelativeRotation(FRotator(0.f, rot, 0.f));
+	LeftRightValue = Value;
+	if(Value!=0)
+		GetController()->SetControlRotation(FRotationMatrix::MakeFromX(FVector(0, -Value, 0)).Rotator());
+	//if (Value > 0)
+	//	rot = 180.0;
+	//else if (Value < 0)
+	//	rot = 0.;
+
+
+	
+	//AddActorLocalRotation(FRotator(0.0f, _rot, 0.f));
+	//GetMesh()->SetRelativeRotation(FRotator(0.f, rot, 0.f));
 	AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
 }
 
 void ADFGhostKnight::MoveUp(float Value)
 {
 	UpDownValue = Value;
-	AddMovementInput(FVector(-1.f, 0.f, 0.f), Value);
-	
-	
+	if(GetController()->GetControlRotation().Yaw ==90)
+		UpDownValue = -Value;
+	AddMovementInput(FVector(1.f, 0.f, 0.f), Value);
+		
+
 }
 
 
@@ -137,6 +157,45 @@ void ADFGhostKnight::Attack()
 	
 	AttackIndex = (AttackIndex + 1) % 3;
 	IsAttacking = true;
+}
+
+void ADFGhostKnight::AttackCheck()
+{
+	FHitResult HitResult;
+	FCollisionQueryParams Params(NAME_None, false, this);
+	// GetActorForwardVector()이게 지금 문제..
+	
+	float AttackRange = 100.f;
+	float AttackRadius = 50.f;
+	float y_axis = -1.0f;
+	if (rot == 180.0)
+		y_axis = 1.0;
+
+	bool bResult = GetWorld()->SweepSingleByChannel(
+		OUT HitResult,
+		GetActorLocation(),
+		GetActorLocation() + GetActorForwardVector() * AttackRange,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel2,
+		FCollisionShape::MakeSphere(AttackRadius),
+		Params);
+	FVector Vec = GetActorForwardVector() * AttackRange;
+	FVector Center = GetActorLocation() + Vec * 0.5f;
+	float HalfHeight = AttackRange * 0.5f + AttackRadius;
+	FQuat Rotation = FRotationMatrix::MakeFromZ(Vec).ToQuat();
+	FColor DrawColor;
+	if (bResult)
+		DrawColor = FColor::Green;
+	else
+		DrawColor = FColor::Red;
+
+
+	DrawDebugCapsule(GetWorld(), Center, HalfHeight, AttackRadius,
+		Rotation, DrawColor, false, 5.f);
+	if (bResult && HitResult.Actor.IsValid())
+	{
+		UE_LOG(LogTemp, Log, TEXT("Hit Actor : %s"), *HitResult.Actor->GetName());
+	}
 }
 
 void ADFGhostKnight::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)

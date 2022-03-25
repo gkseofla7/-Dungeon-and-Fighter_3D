@@ -28,8 +28,8 @@ void UDFGKAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		{
 			IsFalling = Character->GetMovementComponent()->IsFalling();
 
-			Vertical = Character->UpDownValue;
-			Horizontal = Character->LeftRightValue;
+			Vertical = Character->LeftRightValue;
+			Horizontal = Character->UpDownValue;
 		}
 
 	}
@@ -59,5 +59,6 @@ FName UDFGKAnimInstance::GetAttackMontageName(int32 SectionIndex)
 
 void UDFGKAnimInstance::AnimNotify_AttackHit()
 {
-	UE_LOG(LogTemp, Log, TEXT("AnimNotify_AttackHit"));
+	//UE_LOG(LogTemp, Log, TEXT("AnimNotify_AttackHit"));
+	OnAttackHit.Broadcast();
 }
