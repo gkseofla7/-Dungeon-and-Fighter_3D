@@ -12,6 +12,7 @@ UDFGKAnimInstance::UDFGKAnimInstance()
 	{
 		AttackMontage = AM.Object;
 	}
+	IsDead = false;
 }
 void UDFGKAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
@@ -19,7 +20,10 @@ void UDFGKAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
 	auto Pawn = TryGetPawnOwner();//나를 가지고 있는 Pawn 호출, 2개이상이면..?
-	if (IsValid(Pawn))
+
+	if (!::IsValid(Pawn))
+		return;
+	if (!IsDead)
 	{
 		Speed = Pawn->GetVelocity().Size();
 

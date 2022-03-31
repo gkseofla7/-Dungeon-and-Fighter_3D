@@ -57,6 +57,10 @@ void UStatComponent::SetHp(int32 NewHp)
 	Hp = NewHp;
 	if (Hp < 0)
 		Hp = 0;
+	if (Hp>MaxHp)
+	{
+		Hp = MaxHp;
+	}
 
 	OnHpChanged.Broadcast();
 }
@@ -68,6 +72,12 @@ void UStatComponent::OnAttacked(float DamageAmount)
 
 
 	//UE_LOG(LogTemp, Warning, TEXT("OnAttacked %d"), Hp);
+}
+
+void UStatComponent::DrinkHp(float DrinkAmount)
+{
+	int32 NewHp = Hp + DrinkAmount;
+	SetHp(NewHp);
 }
 
 

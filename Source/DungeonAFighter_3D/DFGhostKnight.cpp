@@ -12,6 +12,9 @@
 #include "StatComponent.h"
 #include "Components/WidgetComponent.h"
 #include "DFGKWidget.h"
+#include "DFWeapon.h"
+#include "Item.h"
+#include "InventoryComponent.h"
 // Sets default values
 ADFGhostKnight::ADFGhostKnight()
 {
@@ -48,6 +51,8 @@ ADFGhostKnight::ADFGhostKnight()
 	SideViewCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	SideViewCameraComponent->bUsePawnControlRotation = false; // We don't want the controller rotating the camera
 
+	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+	Inventory->Capacity = 20;
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = false; // Face in the direction we are moving.. ¿Ö true·Î µÅÀÖÁö
@@ -96,6 +101,14 @@ void ADFGhostKnight::BeginPlay()
 {
 	Super::BeginPlay();
 
+	/*FName WeaponSocket(TEXT("hand_l_socket"));
+	auto CurWeapon = GetWorld()->SpawnActor<ADFWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+	
+	if (CurWeapon != nullptr)
+	{
+		CurWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale,
+			WeaponSocket);
+	}*/
 	time = GetWorld()->GetTimeSeconds();
 	
 }
@@ -127,11 +140,48 @@ void ADFGhostKnight::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void ADFGhostKnight::DrinkHp(float HpAmount)
+{
+	Stat->DrinkHp(HpAmount);
+
+}
 float ADFGhostKnight::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Stat->OnAttacked(DamageAmount);
+	if (Stat->GetHp() == 0)
+	{
+		AnimInstance->SetDeadAnim();
+		SetActorEnableCollision(false);
+	}
 
+	
 	return DamageAmount;
+}
+
+bool ADFGhostKnight::CanSetWeapon()
+{
+	return (nullptr == CurrentWeapon);
+}
+
+void ADFGhostKnight::SetWeapon(ADFWeapon* NewWeapon)
+{
+	FName WeaponSocket(TEXT("hand_l_socket"));
+	if (nullptr != NewWeapon)
+	{
+		NewWeapon->AttachToComponent(GetMesh(),
+			FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocket);
+		NewWeapon->SetOwner(this);
+		CurrentWeapon = NewWeapon;
+	}
+}
+
+void ADFGhostKnight::UseItem(UItem* Item)
+{
+	if (Item)
+	{
+		Item->Use(this);
+		//Item->OnUse(this);
+	}
 }
 
 void ADFGhostKnight::MoveRight(float Value)

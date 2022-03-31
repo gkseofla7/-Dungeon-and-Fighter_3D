@@ -26,6 +26,7 @@ public:
 	void SetLevel(int32 Level);
 	void SetHp(int32 NewHp);
 	void OnAttacked(float DamageAmount);
+	void DrinkHp(float NewHp);
 
 
 	int32 GetLevel() { return Level; }

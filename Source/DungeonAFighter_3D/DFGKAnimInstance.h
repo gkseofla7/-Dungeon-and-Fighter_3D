@@ -21,6 +21,7 @@ public:
 	void PlayAttackMontage();
 	void JumpToSection(int32 SectionIndex);
 	FName GetAttackMontageName(int32 SectionIndex);
+	void SetDeadAnim() { IsDead = true; }
 private:
 	UFUNCTION()
 	void AnimNotify_AttackHit();
@@ -36,7 +37,8 @@ private:
 		float Horizontal;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 		float Vertical;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
+		bool IsDead;
 
 public:
 	FOnAttackHit OnAttackHit;

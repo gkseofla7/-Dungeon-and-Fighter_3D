@@ -27,7 +27,7 @@ protected:
 
 	void Attack();
 	void AttackCheck();
-
+	
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location);
 
@@ -47,6 +47,13 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	void DrinkHp(float HpAmount);
+	bool CanSetWeapon();
+	void SetWeapon(class ADFWeapon* NewWeapon);
+	void UseItem(class UItem* Item);
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+		class ADFWeapon* CurrentWeapon;
+
 private:
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -55,6 +62,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* CameraBoom;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"))
+		class UInventoryComponent* Inventory;
 	UPROPERTY(VisibleAnywhere, Category = Pawn)
 	bool IsAttacking = false;
 
