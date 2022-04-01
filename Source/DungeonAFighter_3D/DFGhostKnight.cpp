@@ -132,11 +132,13 @@ void ADFGhostKnight::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	// set up gameplay key bindings
+	//PlayerInputComponent->BindAction(TEXT("Inventory"), this, &ADFGhostKnight::Inventory);
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Attack"), IE_Pressed, this, &ADFGhostKnight::Attack);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ADFGhostKnight::MoveRight);
 	PlayerInputComponent->BindAxis(TEXT("MoveUp"), this, &ADFGhostKnight::MoveUp);
+	
 
 }
 

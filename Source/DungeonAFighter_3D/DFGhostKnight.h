@@ -47,6 +47,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	UFUNCTION(BlueprintCallable)
 	void DrinkHp(float HpAmount);
 	bool CanSetWeapon();
 	void SetWeapon(class ADFWeapon* NewWeapon);

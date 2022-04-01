@@ -19,5 +19,7 @@ ADungeonAFighter_3DGameMode::ADungeonAFighter_3DGameMode()
 		DefaultPawnClass = BP_Char.Class;
 	}
 	PlayerControllerClass = ADFGKPlayerController::StaticClass();
+
+
 	//DefaultPawnClass = ADFGhostKnight::StaticClass();
 }
