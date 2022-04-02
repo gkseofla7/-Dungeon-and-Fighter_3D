@@ -27,11 +27,15 @@ public:
 	void SetHp(int32 NewHp);
 	void OnAttacked(float DamageAmount);
 	void DrinkHp(float NewHp);
+	void DrinkMp(float NewMp);
 
 
 	int32 GetLevel() { return Level; }
 	int32 GetHp() { return Hp; }
+	int32 GetMp() { return Mp; }
 	int32 GetMaxHp() { return MaxHp; }
+	int32 GetMaxMp() { return MaxMp; }
+	UFUNCTION(BlueprintCallable)
 	float GetHpRatio() { return Hp / (float)MaxHp; }
 	int32 GetAttack() { return Attack; }
 	
@@ -39,12 +43,18 @@ public:
 private:
 	UPROPERTY(EditAnywhere, Category = Stat, Meta=(AllowPrivateAccess = true))
 	int32 Level;
-	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat, Meta = (AllowPrivateAccess = true))
 	int32 Hp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat, Meta = (AllowPrivateAccess = true))
+	int32 Mp;
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
-		int32 MaxHp;
+	int32 MaxHp;
+	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
+	int32 MaxMp;
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
 	int32 Attack;
+
+
 
 public:
 	FOnHpChanged OnHpChanged;

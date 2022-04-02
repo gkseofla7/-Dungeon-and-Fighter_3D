@@ -16,10 +16,10 @@ class DUNGEONAFIGHTER_3D_API ADFGKPlayerController : public APlayerController
 public:
 	ADFGKPlayerController();
 private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite,  Category = "UI", Meta = (AllowPrivateAccess = true))
-	TSubclassOf<class UDFGameHudWidget> HUDWidgetClass;
-	UPROPERTY()
-		class UDFGameHudWidget* HUDWidget;
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite,  Category = "UI", Meta = (AllowPrivateAccess = true))
+	//TSubclassOf<class UDFGameHudWidget> HUDWidgetClass;
+	//UPROPERTY()
+	//	class UDFGameHudWidget* HUDWidget;
 protected:
 	virtual void BeginPlay() override;
 };

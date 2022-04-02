@@ -50,6 +50,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DrinkHp(float HpAmount);
+	UFUNCTION(BlueprintCallable)
+	void DrinkMp(float MpAmount);
+	UFUNCTION(BlueprintPure)
+	float GetHpPercent();
+	UFUNCTION(BlueprintPure)
+	float GetMpPercent();
 	bool CanSetWeapon();
 	void SetWeapon(class ADFWeapon* NewWeapon);
 	void UseItem(class UItem* Item);
@@ -83,9 +89,10 @@ public:
 	UPROPERTY()
 	float time;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UStatComponent* Stat;
 
+	
 
 	UPROPERTY(VisibleAnywhere)
 		class UWidgetComponent* HpBar;

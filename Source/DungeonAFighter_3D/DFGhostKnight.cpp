@@ -144,7 +144,7 @@ void ADFGhostKnight::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ADFGhostKnight::DrinkHp(float HpAmount)
 {
-	Stat->DrinkHp(HpAmount);
+	Stat->DrinkHp(-HpAmount);
 
 }
 float ADFGhostKnight::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -159,6 +159,12 @@ float ADFGhostKnight::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	
 	return DamageAmount;
 }
+void ADFGhostKnight::DrinkMp(float MpAmount)
+{
+	Stat->DrinkMp(-MpAmount);
+
+}
+
 
 bool ADFGhostKnight::CanSetWeapon()
 {
@@ -288,3 +294,6 @@ void ADFGhostKnight::TouchStopped(const ETouchIndex::Type FingerIndex, const FVe
 {
 	StopJumping();
 }
+
+float ADFGhostKnight::GetHpPercent() { return Stat->GetHpRatio(); }
+float ADFGhostKnight::GetMpPercent() { return 1.0;}

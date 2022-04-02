@@ -45,8 +45,11 @@ void UStatComponent::SetLevel(int32 NewLevel)
 		{
 			Level = StatData->Level;
 			MaxHp = StatData->MaxHp;
+			MaxMp = StatData->MaxMp;
 			SetHp(MaxHp);
+			Mp = StatData->MaxMp;
 			Attack = StatData->Attack;
+			
 		}
 	}
 
@@ -79,6 +82,13 @@ void UStatComponent::DrinkHp(float DrinkAmount)
 	int32 NewHp = Hp + DrinkAmount;
 	SetHp(NewHp);
 }
+
+void UStatComponent::DrinkMp(float DrinkAmount)
+{
+	int32 NewMp = Mp + DrinkAmount;
+	Mp = NewMp;
+}
+
 
 
 
