@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "InventoryStruct.h"
 #include "DFGameHudWidget.generated.h"
 
 /**
@@ -16,5 +17,23 @@ class DUNGEONAFIGHTER_3D_API UDFGameHudWidget : public UUserWidget
 	
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool ActivateInventory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ESlateVisibility InventoryVisible = ESlateVisibility::Hidden;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ESlateVisibility ActionMenuVisible = ESlateVisibility::Hidden;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText ActionText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 InventorySlotClicked = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FInventoryStruct> Inventory;
+
 
 };
