@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "DFGhostKnight.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate)
 UCLASS()
 class DUNGEONAFIGHTER_3D_API ADFGhostKnight : public ACharacter
 {
@@ -25,7 +26,7 @@ protected:
 	void MoveRight(float Val);
 	void MoveUp(float Value);
 
-	void Attack();
+
 	void AttackCheck();
 	
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
@@ -35,7 +36,14 @@ protected:
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	//블루프린트 비주얼 스크립팅 시스템 안에서 보여지며 호출 또는 오버라이드가 가능하다
 		//클래스의 디폴트 property 내 델리게이트로 할당할 수 있음
+public:
+	UFUNCTION(BlueprintCallable)
+	void DisableMouseCursor() const;
+
+	
 public:	
+	void Attack();
+	FOnAttackEndDelegate OnAttackEnd;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	// Called to bind functionality to input
@@ -96,6 +104,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		class UWidgetComponent* HpBar;
+
+	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	//	class UWidgetComponent* GameHudReference;
+	//UDFGameHudWidget
 	UPROPERTY()
 		float rot = 0;
 

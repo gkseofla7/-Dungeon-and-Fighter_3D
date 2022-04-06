@@ -16,7 +16,7 @@ class DUNGEONAFIGHTER_3D_API UDFGameHudWidget : public UUserWidget
 	GENERATED_BODY()
 	
 
-protected:
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool ActivateInventory;
 

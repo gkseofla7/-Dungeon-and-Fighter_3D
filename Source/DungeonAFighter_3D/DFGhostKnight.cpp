@@ -15,6 +15,10 @@
 #include "DFWeapon.h"
 #include "Item.h"
 #include "InventoryComponent.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "DFGameHudWidget.h"
+#include "GoblinAIController.h"
 // Sets default values
 ADFGhostKnight::ADFGhostKnight()
 {
@@ -77,6 +81,21 @@ ADFGhostKnight::ADFGhostKnight()
 		HpBar->SetWidgetClass(UW.Class);
 		HpBar->SetDrawSize(FVector2D(200.f, 50.f));
 	}
+	/// <summary>
+	/// 
+	/// </summary>
+	//GameHudReference = CreateDefaultSubobject<UDFGameHudWidget>(TEXT("GameHud"));
+
+
+	//static ConstructorHelpers::FClassFinder<UDFGKWidget>GHR(TEXT("WidgetBlueprint'/Game/UI/GameHud.GameHud_C'"));
+	//if (GHR.Succeeded())
+	//{
+	//	GameHudReference->SetWidgetClass(GHR.Class);
+
+	//}
+	AIControllerClass = AGoblinAIController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
 }
 void ADFGhostKnight::PostInitializeComponents()
 {
@@ -116,6 +135,7 @@ void ADFGhostKnight::BeginPlay()
 void ADFGhostKnight::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	IsAttacking = false;
+	OnAttackEnd.Broadcast();
 }
 
 // Called every frame
@@ -297,3 +317,10 @@ void ADFGhostKnight::TouchStopped(const ETouchIndex::Type FingerIndex, const FVe
 
 float ADFGhostKnight::GetHpPercent() { return Stat->GetHpRatio(); }
 float ADFGhostKnight::GetMpPercent() { return 1.0;}
+
+void ADFGhostKnight::DisableMouseCursor() const
+{
+	UWidgetBlueprintLibrary::SetInputMode_GameOnly(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetShowMouseCursor(false);
+}
