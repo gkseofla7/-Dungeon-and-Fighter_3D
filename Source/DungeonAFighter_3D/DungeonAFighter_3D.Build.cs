@@ -9,5 +9,7 @@ public class DungeonAFighter_3D : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "SlateCore" , "NavigationSystem", "AIModule", "GameplayTasks"});
+
+		PrivateDependencyModuleNames.AddRange(new string[] { "ArenaBattleSetting" });
 	}
 }

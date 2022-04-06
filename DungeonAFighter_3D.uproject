@@ -5,6 +5,14 @@
 	"Description": "",
 	"Modules": [
 		{
+			"Name": "ArenaBattleSetting",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault",
+			"AdditionalDependencies": [
+				"CoreUObject"
+			]
+		},
+		{
 			"Name": "DungeonAFighter_3D",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
@@ -12,7 +20,8 @@
 				"Engine",
 				"UMG",
 				"CoreUObject",
-				"AIModule"
+				"AIModule",
+				"ArenaBattleSetting"
 			]
 		}
 	]

@@ -9,6 +9,7 @@ public class DungeonAFighter_3DTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.Add("DungeonAFighter_3D");
+		ExtraModuleNames.AddRange(new string[]{"DungeonAFighter_3D",
+			"ArenaBattleSetting" });
 	}
 }

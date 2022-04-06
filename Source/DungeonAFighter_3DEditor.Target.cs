@@ -9,6 +9,7 @@ public class DungeonAFighter_3DEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.Add("DungeonAFighter_3D");
+		ExtraModuleNames.AddRange(new string[]{"DungeonAFighter_3D",
+			"ArenaBattleSetting" });
 	}
 }
