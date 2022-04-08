@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "InventoryStruct.h"
 #include "DFWeapon.generated.h"
 
 UCLASS()
@@ -18,7 +19,11 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool IsInRange;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FInventoryStruct ItemInfo;
 
 public:
 	UPROPERTY(VisibleAnywhere, Category = Weapon)

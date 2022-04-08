@@ -67,6 +67,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	float GetMpPercent();
 	bool CanSetWeapon();
+	UFUNCTION(BlueprintCallable)
 	void SetWeapon(class ADFWeapon* NewWeapon);
 	void UseItem(class UItem* Item);
 	UPROPERTY(VisibleAnywhere, Category = Weapon)

@@ -21,9 +21,9 @@ protected:
 	virtual void BeginPlay() override;
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool IsInRange;
+		bool IsInRange;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FInventoryStruct ItemInfo;
+		FInventoryStruct ItemInfo;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
