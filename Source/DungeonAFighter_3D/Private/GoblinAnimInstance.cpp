@@ -47,3 +47,9 @@ void UGoblinAnimInstance::PlayAttackMontage()
 
 }
 
+void UGoblinAnimInstance::AnimNotify_AttackHit()
+{
+	//UE_LOG(LogTemp, Log, TEXT("AnimNotify_AttackHit"));
+	OnAttackHit.Broadcast();
+}
+

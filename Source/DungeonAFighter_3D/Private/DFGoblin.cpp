@@ -34,7 +34,21 @@ ADFGoblin::ADFGoblin()
 
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SM(TEXT("SkeletalMesh'/Game/Goblin/goblin_d_shareyko.goblin_d_shareyko'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> RM(TEXT("Material'/Game/phong1_inst.phong1_inst'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> BRM(TEXT("Material'/Game/Goblin/phong1.phong1'"));
 
+	
+	if (RM.Succeeded())
+	{
+		RedStoredMaterial = RM.Object;
+
+			
+
+	}
+	if (BRM.Succeeded())
+	{
+		StoredMaterial = BRM.Object;
+	}
 	if (SM.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(SM.Object);
@@ -47,7 +61,7 @@ ADFGoblin::ADFGoblin()
 	GetMesh()->SetRelativeLocationAndRotation(
 		FVector(0.f, 0.f, -88.f), FRotator(0.f, 0.f, 0.f)
 	);
-
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("GhostKnight"));
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = false; // Face in the direction we are moving.. 왜 true로 돼있지
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f); // ...at this rotation rate
@@ -74,6 +88,8 @@ ADFGoblin::ADFGoblin()
 
 	AIControllerClass = AGoblinAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	
 
 
 }
@@ -179,26 +195,26 @@ void ADFGoblin::SetWeapon(ADFWeapon* NewWeapon)
 
 void ADFGoblin::ChangeDamageColor()
 {
-	static ConstructorHelpers::FObjectFinder<UMaterial> RM(TEXT("MaterialInstanceConstant'/Game/Goblin/phong1_Inst.phong1_Inst'"));
-	static ConstructorHelpers::FObjectFinder<UMaterial> BRM(TEXT("Material'/Game/Goblin/phong1.phong1'"));
 
-	if (RM.Succeeded())
-	{
-		
-		FTimerHandle WaitHandle;
-		float WaitTime = 0.1; //시간을 설정하고
-		GetWorld()->GetTimerManager().SetTimer(WaitHandle, FTimerDelegate::CreateLambda([&]()
-			{
 
-				GetMesh()->SetMaterial(0, RM.Object);
 
-			}), WaitTime, false); //반복도 여기서 추가 변수를 선언해 설정가능
+	FTimerHandle WaitHandle;
+	float WaitTime = 0.2; //시간을 설정하고
+	GetWorld()->GetTimerManager().SetTimer(WaitHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			GetMesh()->SetMaterial(0, StoredMaterial);
+			UE_LOG(LogTemp, Log, TEXT("Back"));
 
-	}
-	if (BRM.Succeeded())
-	{
-		GetMesh()->SetMaterial(0, BRM.Object);
-	}
+
+			
+		}), WaitTime, false); //반복도 여기서 추가 변수를 선언해 설정가능
+
+	
+
+	GetMesh()->SetMaterial(0, RedStoredMaterial);
+	UE_LOG(LogTemp, Log, TEXT("Red"));
+	
+	
 }
 
 
@@ -235,7 +251,7 @@ void ADFGoblin::Attack()
 	{
 		AttackIndex = 0;
 	}
-
+	
 	time = GetWorld()->GetTimeSeconds();
 	AnimInstance->PlayAttackMontage();
 	//AnimInstance->JumpToSection(AttackIndex);
@@ -277,7 +293,7 @@ void ADFGoblin::AttackCheck()
 		Rotation, DrawColor, false, 5.f);
 	if (bResult && HitResult.Actor.IsValid())
 	{
-		UE_LOG(LogTemp, Log, TEXT("Hit Actor : %s"), *HitResult.Actor->GetName());
+		//UE_LOG(LogTemp, Log, TEXT("Hit Actor : %s"), *HitResult.Actor->GetName());
 		FDamageEvent DamageEvent;
 		//피해자
 		HitResult.Actor->TakeDamage(Stat->GetAttack(), DamageEvent, GetController(), this);

@@ -42,8 +42,10 @@ public:
 
 	
 public:	
+
 	void Attack();
 	FOnAttackEndDelegate OnAttackEnd;
+	class UDFGKAnimInstance* getAnim() { return AnimInstance; }
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	// Called to bind functionality to input
@@ -102,10 +104,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UStatComponent* Stat;
 
-	
+
 
 	UPROPERTY(VisibleAnywhere)
-		class UWidgetComponent* HpBar;
+	class UWidgetComponent* HpBar;
 
 	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	//	class UWidgetComponent* GameHudReference;

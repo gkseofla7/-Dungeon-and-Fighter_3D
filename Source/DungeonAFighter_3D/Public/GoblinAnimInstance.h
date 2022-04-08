@@ -23,8 +23,8 @@ public:
 	//FName GetAttackMontageName(int32 SectionIndex);
 	void SetDeadAnim() { IsDead = true; }
 private:
-	//UFUNCTION()
-	//	void AnimNotify_AttackHit();
+	UFUNCTION()
+		void AnimNotify_AttackHit();
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 		float Speed;

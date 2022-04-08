@@ -5,6 +5,7 @@
 #include "GoblinAIController.h"
 #include "DFGhostKnight.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "DFGKAnimInstance.h"
 
 UDTDecorator_IsInAttackRange::UDTDecorator_IsInAttackRange()
 {
@@ -22,6 +23,8 @@ bool UDTDecorator_IsInAttackRange::CalculateRawConditionValue(UBehaviorTreeCompo
 
 	auto Target = Cast<ADFGhostKnight>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AGoblinAIController::TargetKey));
 	if (nullptr == Target)
+		return false;
+	if (Target->getAnim()->GetDead() == true)//Á×¾úÀ¸¸é
 		return false;
 
 	bResult = (Target->GetDistanceTo(ControllingPawn) <= 200.0f);

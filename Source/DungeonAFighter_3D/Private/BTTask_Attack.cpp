@@ -4,7 +4,7 @@
 #include "BTTask_Attack.h"
 #include "GoblinAIController.h"
 #include "DFGhostKnight.h"
-
+#include "DFGoblin.h"
 
 UBTTask_Attack::UBTTask_Attack()
 {
@@ -15,8 +15,8 @@ UBTTask_Attack::UBTTask_Attack()
 EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
-
-	auto ABCharacter = Cast<ADFGhostKnight>(OwnerComp.GetAIOwner()->GetPawn());
+	
+	auto ABCharacter = Cast<ADFGoblin>(OwnerComp.GetAIOwner()->GetPawn());
 	if (nullptr == ABCharacter)
 		return EBTNodeResult::Failed;
 

@@ -93,8 +93,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UStatComponent* Stat;
 
-
-
+	UPROPERTY()
+	UMaterial* RedStoredMaterial;
+	UPROPERTY()
+	UMaterial* StoredMaterial;
 	UPROPERTY(VisibleAnywhere)
 		class UWidgetComponent* HpBar;
 

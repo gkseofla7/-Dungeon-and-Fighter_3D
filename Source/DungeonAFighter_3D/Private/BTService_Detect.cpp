@@ -7,6 +7,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
+#include "DFGKAnimInstance.h"
 
 UBTService_Detect::UBTService_Detect()
 {
@@ -42,6 +43,8 @@ void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 			ADFGhostKnight* GhostKnight = Cast<ADFGhostKnight>(OverlapResult.GetActor());
 			if (GhostKnight && GhostKnight->GetController()->IsPlayerController())
 			{
+				if (GhostKnight->getAnim()->GetDead() == true)//Á×¾úÀ¸¸é
+					continue;
 				OwnerComp.GetBlackboardComponent()->SetValueAsObject(AGoblinAIController::TargetKey, GhostKnight);
 				DrawDebugSphere(ControllingPawn->GetWorld(), Center, DetectRadius, 16, FColor::Green,
 					false, 0.2f);

@@ -95,9 +95,9 @@ ADFGhostKnight::ADFGhostKnight()
 	//	GameHudReference->SetWidgetClass(GHR.Class);
 
 	//}
-	AIControllerClass = AGoblinAIController::StaticClass();
-	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-
+	//AIControllerClass = AGoblinAIController::StaticClass();
+	//AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("GhostKnight"));
 	auto DefaultSetting = GetDefault<UABCharacterSetting>();
 	if (DefaultSetting->CharacterAssets.Num() > 0)
 	{
@@ -291,7 +291,7 @@ void ADFGhostKnight::Attack()
 	{
 		AttackIndex = 0;
 	}
-	
+	UE_LOG(LogTemp, Log, TEXT("Hit"));
 	time = GetWorld()->GetTimeSeconds();
 	AnimInstance->PlayAttackMontage();
 	AnimInstance->JumpToSection(AttackIndex);
@@ -328,7 +328,7 @@ void ADFGhostKnight::AttackCheck()
 	else
 		DrawColor = FColor::Red;
 
-
+	UE_LOG(LogTemp, Log, TEXT("Hit Actor"));
 	DrawDebugCapsule(GetWorld(), Center, HalfHeight, AttackRadius,
 		Rotation, DrawColor, false, 5.f);
 	if (bResult && HitResult.Actor.IsValid())

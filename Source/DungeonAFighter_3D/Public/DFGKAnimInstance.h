@@ -22,6 +22,7 @@ public:
 	void JumpToSection(int32 SectionIndex);
 	FName GetAttackMontageName(int32 SectionIndex);
 	void SetDeadAnim() { IsDead = true; }
+	bool GetDead() { return IsDead; }
 private:
 	UFUNCTION()
 	void AnimNotify_AttackHit();
