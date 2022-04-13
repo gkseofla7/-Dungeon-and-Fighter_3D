@@ -37,7 +37,7 @@ ADFGoblin::ADFGoblin()
 	static ConstructorHelpers::FObjectFinder<UMaterial> RM(TEXT("Material'/Game/phong1_inst.phong1_inst'"));
 	static ConstructorHelpers::FObjectFinder<UMaterial> BRM(TEXT("Material'/Game/Goblin/phong1.phong1'"));
 
-	
+	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	if (RM.Succeeded())
 	{
 		RedStoredMaterial = RM.Object;
@@ -53,17 +53,26 @@ ADFGoblin::ADFGoblin()
 	{
 		GetMesh()->SetSkeletalMesh(SM.Object);
 	}
+
+	static ConstructorHelpers::FClassFinder<UAnimInstance> WARRIOR_ANIM(TEXT("AnimBlueprint'/Game/Blueprints/ABP_GoblinAnim.ABP_GoblinAnim_C'"));
+
+	if (WARRIOR_ANIM.Succeeded())
+	{
+		GetMesh()->SetAnimInstanceClass(WARRIOR_ANIM.Class);
+	}
 	//Don't rotate when the controller rotates.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
 	GetMesh()->SetRelativeLocationAndRotation(
-		FVector(0.f, 0.f, -88.f), FRotator(0.f, 0.f, 0.f)
+		FVector(0.f, 0.f, -78.f), FRotator(0.f, -90.f, 0.f)
 	);
+	GetMesh()->SetRelativeScale3D(FVector(0.6f, 0.6f, 0.6f));
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("GhostKnight"));
+
 	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = false; // Face in the direction we are moving.. ¿Ö true·Î µÅÀÖÁö
+	GetCharacterMovement()->bOrientRotationToMovement = true; // Face in the direction we are moving.. ¿Ö true·Î µÅÀÖÁö
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->GravityScale = 2.f;
 	GetCharacterMovement()->AirControl = 0.80f;
@@ -71,7 +80,7 @@ ADFGoblin::ADFGoblin()
 	GetCharacterMovement()->GroundFriction = 3.f;
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 	GetCharacterMovement()->MaxFlySpeed = 600.f;
-
+	
 	Stat = CreateDefaultSubobject<UStatComponent>(TEXT("GoblinSTAT"));
 
 	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBAR"));
@@ -116,7 +125,7 @@ void ADFGoblin::PostInitializeComponents()
 void ADFGoblin::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 
 	time = GetWorld()->GetTimeSeconds();
 
