@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "DFGameInstance.h"
 #include "DFGhostKnight.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate)
@@ -15,6 +16,8 @@ class DUNGEONAFIGHTER_3D_API ADFGhostKnight : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ADFGhostKnight();
+	void SetCharacterState(ECharacterState NewState);
+	ECharacterState GetCharacterState() const;
 
 protected:
 	// Called when the game starts or when spawned
@@ -92,8 +95,17 @@ private:
 	UPROPERTY()
 		int32 AttackIndex = 0;
 
+	int32 AssetIndex = 0;
+
 	void OnAssetLoadCompleted();
 
+
+	UPROPERTY(Transient, VisibleInstanceOnly, BlueprintReadOnly, Category = State, Meta = (AllowPrivateAccess = true))
+		bool bIsPlayer;
+	//UPROPERTY()
+	//	class  AABAIController* ABAIController;
+	UPROPERTY()
+		class ADFGKPlayerController* ABPlayerController;
 public:
 	UPROPERTY()
 		float UpDownValue = 0;

@@ -74,4 +74,9 @@ protected:
 
 	FTimerHandle SpawnNPCTimerHandle = { };
 	FTimerHandle SpawnItemBoxTimerHandle = { };
+
+private:
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+		FName TransferLevelName;
+
 };

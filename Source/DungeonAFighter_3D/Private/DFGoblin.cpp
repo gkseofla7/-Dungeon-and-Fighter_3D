@@ -24,6 +24,7 @@
 #include "GoblinAIController.h"
 #include "ABCharacterSetting.h"
 #include "DFGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 
 // Sets default values
@@ -202,9 +203,8 @@ void ADFGoblin::SetWeapon(ADFWeapon* NewWeapon)
 	}
 }
 
-void ADFGoblin::ChangeDamageColor()
+void ADFGoblin::ChangeDamageColor_Implementation()
 {
-
 
 
 	FTimerHandle WaitHandle;

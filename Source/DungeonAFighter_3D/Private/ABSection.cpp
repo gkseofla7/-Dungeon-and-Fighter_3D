@@ -3,6 +3,8 @@
 #include "ABSection.h"
 #include "DFGoblin.h"
 #include "DFItemBox.h"
+#include "DFGhostKnight.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 AABSection::AABSection()
 {
@@ -153,31 +155,39 @@ void AABSection::OnGateTriggerBeginOverlap(UPrimitiveComponent* OverlappedCompon
 	UE_LOG(LogTemp, Warning, TEXT("Out"));
 	FName ComponentTag = OverlappedComponent->ComponentTags[0];
 	FName SocketName = FName(*ComponentTag.ToString().Left(2));
+	TransferLevelName = FName("Stage1");
+	ADFGhostKnight* Player = Cast<ADFGhostKnight>(OtherActor);
+	if (Player != nullptr)
+	{
+		UGameplayStatics::OpenLevel(this, TransferLevelName);
+	}
+
+
 	if (!Mesh->DoesSocketExist(SocketName))
 		return;
 
 	FVector NewLocation = Mesh->GetSocketLocation(SocketName);
 
-	TArray<FOverlapResult> OverlapResults;
-	FCollisionQueryParams CollisionQueryParam(NAME_None, false, this);
-	FCollisionObjectQueryParams ObjectQueryParam(FCollisionObjectQueryParams::InitType::AllObjects);
-	bool bResult = GetWorld()->OverlapMultiByObjectType(
-		OverlapResults,
-		NewLocation,
-		FQuat::Identity,
-		ObjectQueryParam,
-		FCollisionShape::MakeSphere(775.0f),
-		CollisionQueryParam
-	);
+	//TArray<FOverlapResult> OverlapResults;
+	//FCollisionQueryParams CollisionQueryParam(NAME_None, false, this);
+	//FCollisionObjectQueryParams ObjectQueryParam(FCollisionObjectQueryParams::InitType::AllObjects);
+	//bool bResult = GetWorld()->OverlapMultiByObjectType(
+	//	OverlapResults,
+	//	NewLocation,
+	//	FQuat::Identity,
+	//	ObjectQueryParam,
+	//	FCollisionShape::MakeSphere(775.0f),
+	//	CollisionQueryParam
+	//);
 
-	if (!bResult)
-	{
-		auto NewSection = GetWorld()->SpawnActor<AABSection>(NewLocation, FRotator::ZeroRotator);
-	}
-	else
-	{
-		//ABLOG(Warning, TEXT("New section area is not empty."));
-	}
+	//if (!bResult)
+	//{
+	//	auto NewSection = GetWorld()->SpawnActor<AABSection>(NewLocation, FRotator::ZeroRotator);
+	//}
+	//else
+	//{
+	//	//ABLOG(Warning, TEXT("New section area is not empty."));
+	//}
 }
 
 void AABSection::OnNPCSpawn()

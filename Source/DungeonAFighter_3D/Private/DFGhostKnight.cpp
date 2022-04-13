@@ -21,6 +21,7 @@
 #include "GoblinAIController.h"
 #include "ABCharacterSetting.h"
 #include "DFGameInstance.h"
+#include "DFGKPlayerController.h"
 // Sets default values
 ADFGhostKnight::ADFGhostKnight()
 {
@@ -106,6 +107,10 @@ ADFGhostKnight::ADFGhostKnight()
 			UE_LOG(LogTemp, Log, TEXT("Character Asset : %s"), *CharacterAssets.ToString());
 		}
 	}
+	//SetActorHiddenInGame(true);
+	//HpBar->SetHiddenInGame(true);
+	//bCanBeDamaged = false;
+
 
 }
 void ADFGhostKnight::PostInitializeComponents()
@@ -139,6 +144,12 @@ void ADFGhostKnight::BeginPlay()
 		CurWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale,
 			WeaponSocket);
 	}*/
+	//bIsPlayer = IsPlayerControlled();
+	//if (bIsPlayer)
+	//{
+	//	ABPlayerController = Cast<ADFGKPlayerController>(GetController());
+	//}
+	//
 	time = GetWorld()->GetTimeSeconds();
 
 	if (!IsPlayerControlled())
@@ -359,4 +370,13 @@ void ADFGhostKnight::DisableMouseCursor() const
 	UWidgetBlueprintLibrary::SetInputMode_GameOnly(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetShowMouseCursor(false);
+}
+
+void ADFGhostKnight::SetCharacterState(ECharacterState NewState)
+{
+}
+
+ECharacterState ADFGhostKnight::GetCharacterState() const
+{
+	return ECharacterState();
 }

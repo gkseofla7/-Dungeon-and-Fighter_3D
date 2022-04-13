@@ -22,6 +22,15 @@ struct FMyCharacterData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 MaxMp;
 };
+
+UENUM(BlueprintType)
+enum class ECharacterState : uint8
+{
+	PREININ,
+	LOADING,
+	READY,
+	DAED
+};
 UCLASS()
 class DUNGEONAFIGHTER_3D_API UDFGameInstance : public UGameInstance
 {

@@ -68,6 +68,7 @@ public:
 	//void UseItem(class UItem* Item);
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 		class ADFWeapon* CurrentWeapon;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ChangeDamageColor();
 
 private:
