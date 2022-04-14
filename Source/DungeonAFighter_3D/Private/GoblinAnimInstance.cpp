@@ -12,6 +12,11 @@ UGoblinAnimInstance::UGoblinAnimInstance()
 	{
 		AttackMontage = AM.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> IM(TEXT("AnimMontage'/Game/Animations/Gobliin_Impact_Montage.Gobliin_Impact_Montage'"));
+	if (IM.Succeeded())
+	{
+		ImpactMontage = IM.Object;
+	}
 	IsDead = false;
 }
 void UGoblinAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -46,6 +51,10 @@ void UGoblinAnimInstance::PlayAttackMontage()
 	Montage_Play(AttackMontage, 1.f);
 
 }
+void UGoblinAnimInstance::PlayImpactMontage()
+{
+	Montage_Play(ImpactMontage, 1.f);
+}
 
 void UGoblinAnimInstance::AnimNotify_AttackHit()
 {
@@ -53,3 +62,7 @@ void UGoblinAnimInstance::AnimNotify_AttackHit()
 	OnAttackHit.Broadcast();
 }
 
+void UGoblinAnimInstance::AnimNotify_OnAnimEnd_Impact()
+{
+	OnImpactHit.Broadcast();
+}

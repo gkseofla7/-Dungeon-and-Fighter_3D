@@ -7,6 +7,7 @@
 #include "GoblinAnimInstance.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnAttackHit);
+DECLARE_MULTICAST_DELEGATE(FOnImpactHit)
 /**
  *
  */
@@ -19,12 +20,16 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	void PlayAttackMontage();
+	void PlayImpactMontage();
 	//void JumpToSection(int32 SectionIndex);
 	//FName GetAttackMontageName(int32 SectionIndex);
 	void SetDeadAnim() { IsDead = true; }
 private:
 	UFUNCTION()
 		void AnimNotify_AttackHit();
+
+	UFUNCTION()
+		void AnimNotify_OnAnimEnd_Impact();
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 		float Speed;
@@ -32,6 +37,8 @@ private:
 		bool IsFalling;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 		UAnimMontage* AttackMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
+		UAnimMontage* ImpactMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 		float Horizontal;
@@ -42,4 +49,5 @@ private:
 
 public:
 	FOnAttackHit OnAttackHit;
+	FOnImpactHit OnImpactHit;
 };

@@ -7,6 +7,7 @@
 #include "DFGoblin.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate)
+DECLARE_MULTICAST_DELEGATE(FOnDamagedEndDelegate)
 UCLASS()
 class DUNGEONAFIGHTER_3D_API ADFGoblin : public ACharacter
 {
@@ -46,6 +47,7 @@ public:
 public:
 	void Attack();
 	FOnAttackEndDelegate OnAttackEnd;
+	FOnDamagedEndDelegate OnDamagedEnd;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	// Called to bind functionality to input
@@ -54,7 +56,7 @@ public:
 
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-
+	
 	UFUNCTION(BlueprintCallable)
 		void DrinkHp(float HpAmount);
 	UFUNCTION(BlueprintCallable)
@@ -65,11 +67,12 @@ public:
 		float GetMpPercent();
 	bool CanSetWeapon();
 	void SetWeapon(class ADFWeapon* NewWeapon);
+	void SetIsAttacked() { IsAttacked = false; }
 	//void UseItem(class UItem* Item);
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 		class ADFWeapon* CurrentWeapon;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void ChangeDamageColor();
+	bool ChangeDamageColor();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = Pawn)
@@ -104,6 +107,8 @@ public:
 
 	UPROPERTY()
 		float rot = 0;
+
+	bool IsAttacked = false;
 
 	FSoftObjectPath CharacterAssetToLoad = FSoftObjectPath(nullptr);
 	TSharedPtr<struct FStreamableHandle> AssetStreamingHandle;

@@ -10,6 +10,8 @@
 const FName AGoblinAIController::HomePosKey(TEXT("HomePos"));
 const FName AGoblinAIController::PatrolPosKey(TEXT("PatrolPos"));
 const FName AGoblinAIController::TargetKey(TEXT("Target"));
+const FName AGoblinAIController::IsAttackedKey(TEXT("IsAttacked"));
+const FName AGoblinAIController::DamagedPosKey(TEXT("DamagedPos"));
 AGoblinAIController::AGoblinAIController()
 {
 
@@ -36,7 +38,6 @@ void AGoblinAIController::OnPossess(APawn* InPawn)
 	if (UseBlackboard(BlackboardData, Blackboard))
 	{
 		Blackboard->SetValueAsVector(HomePosKey, InPawn->GetActorLocation());
-		UE_LOG(LogTemp, Log, TEXT("Hello"));
 		if (RunBehaviorTree(BehaviorTree))
 		{
 			

@@ -21,6 +21,9 @@ public:
 	static const FName HomePosKey;
 	static const FName PatrolPosKey;
 	static const FName TargetKey;
+	static const FName IsAttackedKey;
+	static const FName DamagedPosKey;
+	class UBlackboardData* GetBlackboardData() { return BlackboardData; }
 private:
 	void RandomMove();
 

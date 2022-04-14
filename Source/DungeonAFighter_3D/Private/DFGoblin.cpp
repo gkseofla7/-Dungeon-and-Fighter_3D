@@ -24,6 +24,8 @@
 #include "GoblinAIController.h"
 #include "ABCharacterSetting.h"
 #include "DFGameInstance.h"
+#include "Kismet/KismetMathLibrary.h"
+
 #include "Kismet/GameplayStatics.h"
 // Sets default values
 
@@ -114,12 +116,15 @@ void ADFGoblin::PostInitializeComponents()
 	{
 		AnimInstance->OnMontageEnded.AddDynamic(this, &ADFGoblin::OnAttackMontageEnded);
 		AnimInstance->OnAttackHit.AddUObject(this, &ADFGoblin::AttackCheck);
+		AnimInstance->OnImpactHit.AddUObject(this, &ADFGoblin::SetIsAttacked);
 	}
 	HpBar->InitWidget();//이걸 꼭 추가
 	//Delegate 바인딩 해주는 부분
 	auto HpWidget = Cast<UDFGKWidget>(HpBar->GetUserWidgetObject());
 	if (HpWidget)
 		HpWidget->BindHp(Stat);
+
+	
 
 }
 // Called when the game starts or when spawned
@@ -170,6 +175,15 @@ void ADFGoblin::DrinkHp(float HpAmount)
 float ADFGoblin::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Stat->OnAttacked(DamageAmount);
+	
+	FVector OposDir = GetActorLocation() - DamageCauser->GetActorLocation();
+	OposDir = FVector(-1000.0f,-1000.0f,-1000.0f)*UKismetMathLibrary::Normal(OposDir);
+	LaunchCharacter(OposDir,false, false);
+	UE_LOG(LogTemp, Log, TEXT("???? %f %f %f"),OposDir.X, OposDir.Y, OposDir.Z );
+	
+	UE_LOG(LogTemp, Log, TEXT("Yes"));
+	IsAttacked = true;
+	AnimInstance->PlayImpactMontage();
 	if (Stat->GetHp() == 0)
 	{
 		AnimInstance->SetDeadAnim();
@@ -203,7 +217,7 @@ void ADFGoblin::SetWeapon(ADFWeapon* NewWeapon)
 	}
 }
 
-void ADFGoblin::ChangeDamageColor_Implementation()
+bool ADFGoblin::ChangeDamageColor_Implementation()
 {
 
 
@@ -223,6 +237,7 @@ void ADFGoblin::ChangeDamageColor_Implementation()
 	GetMesh()->SetMaterial(0, RedStoredMaterial);
 	UE_LOG(LogTemp, Log, TEXT("Red"));
 	
+	return true;
 	
 }
 
