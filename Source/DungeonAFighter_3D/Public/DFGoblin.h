@@ -8,6 +8,7 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate)
 DECLARE_MULTICAST_DELEGATE(FOnDamagedEndDelegate)
+DECLARE_MULTICAST_DELEGATE(FOnDiedDelegate)
 UCLASS()
 class DUNGEONAFIGHTER_3D_API ADFGoblin : public ACharacter
 {
@@ -35,6 +36,7 @@ protected:
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location);
 
+	//void OnAttackMontageEnded();
 	UFUNCTION()
 		void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	//블루프린트 비주얼 스크립팅 시스템 안에서 보여지며 호출 또는 오버라이드가 가능하다
@@ -48,6 +50,7 @@ public:
 	void Attack();
 	FOnAttackEndDelegate OnAttackEnd;
 	FOnDamagedEndDelegate OnDamagedEnd;
+	FOnDiedDelegate OnDied;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	// Called to bind functionality to input
@@ -72,11 +75,10 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 		class ADFWeapon* CurrentWeapon;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	bool ChangeDamageColor();
+	float ChangeDamageColor(float DamageAmount);
 
 private:
-	UPROPERTY(VisibleAnywhere, Category = Pawn)
-		bool IsAttacking = false;
+
 
 	UPROPERTY()
 		class UGoblinAnimInstance* AnimInstance;
@@ -109,6 +111,8 @@ public:
 		float rot = 0;
 
 	bool IsAttacked = false;
+	UPROPERTY(VisibleAnywhere, Category = Pawn)
+		bool IsAttacking = false;
 
 	FSoftObjectPath CharacterAssetToLoad = FSoftObjectPath(nullptr);
 	TSharedPtr<struct FStreamableHandle> AssetStreamingHandle;

@@ -22,7 +22,7 @@ EBTNodeResult::Type UBTTask_Damaged::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 		return EBTNodeResult::Failed;
 	auto Target = Cast<ADFGhostKnight>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AGoblinAIController::TargetKey));
 	FVector OposDir = ABCharacter->GetActorLocation() - Target->GetActorLocation();
-	OposDir = FVector(-1000.0f, -1000.0f, -1000.0f) * UKismetMathLibrary::Normal(OposDir);
+	OposDir = FVector(-100.0f, -100.0f, -100.0f) * UKismetMathLibrary::Normal(OposDir);
 	ABCharacter->LaunchCharacter(OposDir, false, false);
 
 
@@ -36,6 +36,7 @@ void UBTTask_Damaged::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 	auto ABCharacter = Cast<ADFGoblin>(OwnerComp.GetAIOwner()->GetPawn());
+	
 	if (ABCharacter->IsAttacked == false)
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

@@ -44,6 +44,7 @@ public:
 	FMyCharacterData* GetStatData(int32 Level);
 	
 	FStreamableManager StreamableManager;
+	bool Ended = false;
 private:
 	UPROPERTY()
 	class UDataTable* MyStats;

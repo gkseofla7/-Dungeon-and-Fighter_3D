@@ -28,6 +28,6 @@ void UBTService_Attacked::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 
 
 	OwnerComp.GetBlackboardComponent()->SetValueAsBool(AGoblinAIController::IsAttackedKey, ABCharacter->IsAttacked);
-	OwnerComp.GetBlackboardComponent()->SetValueAsVector(AGoblinAIController::DamagedPosKey,  OposDir);
+	//OwnerComp.GetBlackboardComponent()->SetValueAsVector(AGoblinAIController::DamagedPosKey,  OposDir);
 	
 }

@@ -211,7 +211,7 @@ void ADFGhostKnight::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ADFGhostKnight::DrinkHp(float HpAmount)
 {
-	Stat->DrinkHp(-HpAmount);
+	Stat->DrinkHp(HpAmount);
 
 }
 float ADFGhostKnight::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

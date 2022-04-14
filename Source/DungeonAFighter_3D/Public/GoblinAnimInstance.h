@@ -7,7 +7,8 @@
 #include "GoblinAnimInstance.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnAttackHit);
-DECLARE_MULTICAST_DELEGATE(FOnImpactHit)
+DECLARE_MULTICAST_DELEGATE(FOnImpactHit);
+DECLARE_MULTICAST_DELEGATE(FOnAttackEnd);
 /**
  *
  */
@@ -30,6 +31,8 @@ private:
 
 	UFUNCTION()
 		void AnimNotify_OnAnimEnd_Impact();
+	UFUNCTION()
+		void AnimNotify_AttackEnd();
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 		float Speed;
@@ -50,4 +53,5 @@ private:
 public:
 	FOnAttackHit OnAttackHit;
 	FOnImpactHit OnImpactHit;
+	FOnAttackEnd OnAttackEnd;
 };

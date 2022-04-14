@@ -9,7 +9,7 @@
 AABSection::AABSection()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MESH"));
 	RootComponent = Mesh;
@@ -67,6 +67,14 @@ AABSection::AABSection()
 	EnemySpawnTime = 2.0f;
 	ItemBoxSpawnTime = 5.0f;
 }
+void AABSection::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	auto GameInstance = Cast<UDFGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if(GameInstance->Ended == true)
+		SetState(ESectionState::COMPLETE);
+
+}
 
 void AABSection::OnConstruction(const FTransform& Transform)
 {
@@ -79,7 +87,7 @@ void AABSection::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetState(bNoBattle ? ESectionState::COMPLETE : ESectionState::READY);
+	SetState(bNoBattle ? ESectionState::COMPLETE : ESectionState::BATTLE);
 }
 
 void AABSection::SetState(ESectionState NewState)
@@ -108,7 +116,7 @@ void AABSection::SetState(ESectionState NewState)
 		OperateGates(false);
 		
 	
-		GetWorld()->GetTimerManager().SetTimer(SpawnNPCTimerHandle, FTimerDelegate::CreateUObject(this, &AABSection::OnNPCSpawn), EnemySpawnTime, false);
+		GetWorld()->GetTimerManager().SetTimer(SpawnNPCTimerHandle, FTimerDelegate::CreateUObject(this, &AABSection::TOnNPCSpawn), EnemySpawnTime, false);
 
 		GetWorld()->GetTimerManager().SetTimer(SpawnItemBoxTimerHandle, FTimerDelegate::CreateLambda([this]() -> void {
 			FVector2D RandXY = FMath::RandPointInCircle(600.0f);
@@ -198,4 +206,16 @@ void AABSection::OnNPCSpawn()
 	FVector spawnLocation = GetActorLocation() + FVector::UpVector * 88.0f;
 	GetWorld()->SpawnActor<ADFGoblin>(GetActorLocation() + FVector::UpVector * 88.0f, FRotator::ZeroRotator);
 	//GetWorld()->SpawnActor<ADFGoblin>(ToSpawn, spawnLocation, rotator, spawnParams);
+}
+
+
+void AABSection::TOnNPCSpawn_Implementation()
+{
+	FActorSpawnParameters spawnParams;
+	spawnParams.Owner = this;
+	//FRotator rotator = FRotator::ZeroRotator;
+	//FVector spawnLocation = GetActorLocation() + FVector::UpVector * 88.0f;
+	//GetWorld()->SpawnActor<ADFGoblin>(GetActorLocation() + FVector::UpVector * 88.0f, FRotator::ZeroRotator);
+	//GetWorld()->SpawnActor<ADFGoblin>(ToSpawn, spawnLocation, rotator, spawnParams);
+
 }

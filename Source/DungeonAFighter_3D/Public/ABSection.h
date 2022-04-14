@@ -18,7 +18,7 @@ public:
 	// Sets default values for this actor's properties
 	AABSection();
 	virtual void OnConstruction(const FTransform& Transform) override;
-
+	virtual void Tick(float DeltaTime) override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -44,6 +44,10 @@ private:
 
 	UFUNCTION(BlueprintCallable)
 	void OnNPCSpawn();
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+		void TOnNPCSpawn();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = Mesh, Meta = (AllowPrivateAccess = true))

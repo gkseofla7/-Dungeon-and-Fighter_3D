@@ -66,3 +66,7 @@ void UGoblinAnimInstance::AnimNotify_OnAnimEnd_Impact()
 {
 	OnImpactHit.Broadcast();
 }
+void UGoblinAnimInstance::AnimNotify_AttackEnd()
+{
+	OnAttackEnd.Broadcast();
+}

@@ -117,6 +117,7 @@ void ADFGoblin::PostInitializeComponents()
 		AnimInstance->OnMontageEnded.AddDynamic(this, &ADFGoblin::OnAttackMontageEnded);
 		AnimInstance->OnAttackHit.AddUObject(this, &ADFGoblin::AttackCheck);
 		AnimInstance->OnImpactHit.AddUObject(this, &ADFGoblin::SetIsAttacked);
+		//AnimInstance->OnAttackEnd.AddUObject(this, &ADFGoblin::OnAttackMontageEnded);
 	}
 	HpBar->InitWidget();//이걸 꼭 추가
 	//Delegate 바인딩 해주는 부분
@@ -138,9 +139,15 @@ void ADFGoblin::BeginPlay()
 
 
 }
-
+//void ADFGoblin::OnAttackMontageEnded()
+//{
+//	IsAttacking = false;
+//	OnAttackEnd.Broadcast();
+//}
 void ADFGoblin::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
+	if (bInterrupted == true)
+		return;
 	IsAttacking = false;
 	OnAttackEnd.Broadcast();
 }
@@ -176,21 +183,24 @@ float ADFGoblin::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 {
 	Stat->OnAttacked(DamageAmount);
 	
-	FVector OposDir = GetActorLocation() - DamageCauser->GetActorLocation();
-	OposDir = FVector(-1000.0f,-1000.0f,-1000.0f)*UKismetMathLibrary::Normal(OposDir);
-	LaunchCharacter(OposDir,false, false);
-	UE_LOG(LogTemp, Log, TEXT("???? %f %f %f"),OposDir.X, OposDir.Y, OposDir.Z );
+	//FVector OposDir = GetActorLocation() - DamageCauser->GetActorLocation();
+	//OposDir = FVector(-1000.0f,-1000.0f,-1000.0f)*UKismetMathLibrary::Normal(OposDir);
+	//LaunchCharacter(OposDir,false, false);
+	//UE_LOG(LogTemp, Log, TEXT("???? %f %f %f"),OposDir.X, OposDir.Y, OposDir.Z );
 	
-	UE_LOG(LogTemp, Log, TEXT("Yes"));
+	//UE_LOG(LogTemp, Log, TEXT("Yes"));
 	IsAttacked = true;
 	AnimInstance->PlayImpactMontage();
+	
 	if (Stat->GetHp() == 0)
 	{
+		auto GameInstance = Cast<UDFGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 		AnimInstance->SetDeadAnim();
+		GameInstance->Ended = true;
 		SetActorEnableCollision(false);
 	}
-	ChangeDamageColor();
-
+	ChangeDamageColor(DamageAmount);
+	IsAttacking = false;
 	return DamageAmount;
 }
 void ADFGoblin::DrinkMp(float MpAmount)
@@ -217,7 +227,7 @@ void ADFGoblin::SetWeapon(ADFWeapon* NewWeapon)
 	}
 }
 
-bool ADFGoblin::ChangeDamageColor_Implementation()
+float ADFGoblin::ChangeDamageColor_Implementation(float DamageAmount)
 {
 
 
@@ -237,7 +247,7 @@ bool ADFGoblin::ChangeDamageColor_Implementation()
 	GetMesh()->SetMaterial(0, RedStoredMaterial);
 	UE_LOG(LogTemp, Log, TEXT("Red"));
 	
-	return true;
+	return DamageAmount;
 	
 }
 
@@ -266,9 +276,10 @@ void ADFGoblin::MoveUp(float Value)
 
 void ADFGoblin::Attack()
 {
+	UE_LOG(LogTemp, Log, TEXT("Hit??"));
 	if (IsAttacking)
 		return;
-
+	UE_LOG(LogTemp, Log, TEXT("Miss"));
 	float CurTime = GetWorld()->GetTimeSeconds() - time;
 
 	if (CurTime > 1.)//1초 넘어가면
