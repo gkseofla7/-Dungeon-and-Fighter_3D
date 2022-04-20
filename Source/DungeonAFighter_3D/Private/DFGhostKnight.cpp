@@ -111,6 +111,8 @@ ADFGhostKnight::ADFGhostKnight()
 	//HpBar->SetHiddenInGame(true);
 	//bCanBeDamaged = false;
 
+	Tags.Add("PlayerHero");
+
 
 }
 void ADFGhostKnight::PostInitializeComponents()
