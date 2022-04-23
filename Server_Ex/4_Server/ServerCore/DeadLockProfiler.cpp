@@ -3,6 +3,7 @@
 
 void DeadLockProfiler::PushLock(const char* name)
 {
+	
 	LockGuard guard(_lock);
 
 	//아이디를 찾거나 발급한다.
@@ -31,6 +32,7 @@ void DeadLockProfiler::PushLock(const char* name)
 			if (history.find(lockId) == history.end())
 			{
 				history.insert(lockId);
+			
 				CheckCycle();
 			}
 		}
@@ -41,6 +43,7 @@ void DeadLockProfiler::PushLock(const char* name)
 
 void DeadLockProfiler::PopLock(const char* name)
 {
+	
 	LockGuard guard(_lock);
 
 	if (_lockStack.empty())
@@ -55,6 +58,7 @@ void DeadLockProfiler::PopLock(const char* name)
 
 void DeadLockProfiler::CheckCycle()
 {
+	
 	const int32 lockCount = static_cast<int32>(_nameToId.size());
 	_discoveredOrder = vector<int32>(lockCount, -1);
 	_discoveredCount = 0;
@@ -73,11 +77,12 @@ void DeadLockProfiler::Dfs(int32 here)
 {
 	if (_discoveredOrder[here] != -1)
 		return;
-
+	
 	_discoveredOrder[here] = _discoveredCount++;
 
 	// 모든 인접한 정점을 순회.
 	auto findIt = _lockHistory.find(here);
+
 	if (findIt == _lockHistory.end())//해당 락을 잡으면서 다른 락을 잡은적이 없음
 	{
 		_finished[here] = true;
@@ -85,8 +90,10 @@ void DeadLockProfiler::Dfs(int32 here)
 	}
 
 	set<int32>& nextSet = findIt->second;
+
 	for (int32 there : nextSet)
 	{
+		
 		//아직 방문한 적이 없다면 방문
 		if (_discoveredOrder[there] == -1)
 		{
@@ -94,7 +101,7 @@ void DeadLockProfiler::Dfs(int32 here)
 			Dfs(there);
 			continue;
 		}
-
+		
 		//here가 there보다 먼저 발견되었다면, there는 here의 후손(순방향 간선)
 		if (_discoveredOrder[here] < _discoveredOrder[there])
 			continue;
@@ -119,3 +126,4 @@ void DeadLockProfiler::Dfs(int32 here)
 	}
 	_finished[here] = true;
 }
+

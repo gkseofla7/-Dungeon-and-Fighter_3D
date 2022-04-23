@@ -11,72 +11,57 @@
 #include "CoreMacro.h"
 #include "ThreadManager.h"
 #include "Lock.h"
-class TestLock
+// 소수 구하기
+bool IsPrime(int number)
 {
-	USE_LOCK;
+	if (number <= 1)
+		return false;
+	if (number == 2 || number == 3)
+		return true;
 
-public:
-	int32 TestRead()
+	for (int i = 2; i < number; i++)
 	{
-		READ_LOCK;
-		if (_queue.empty())
-			return -1;
-
-		return _queue.front();
+		if ((number % i) == 0)
+			return false;
 	}
 
-	void TestPush()
-	{
-		WRITE_LOCK;
-		_queue.push(rand() % 100);
-	}
-
-	void TestPop()
-	{
-		WRITE_LOCK;
-
-		if (_queue.empty() == false)
-			_queue.pop();
-
-	}
-
-private:
-	queue<int32> _queue;
-};
-
-TestLock testLock;
-
-void ThreadWrite()
-{
-	while (true)
-	{
-		testLock.TestPush();
-		this_thread::sleep_for(1ms);
-		testLock.TestPop();
-	}
-	
+	return true;
 }
-void ThreadRead()
+
+int CountPrime(int start, int end)
 {
-	while (true)
+	int count = 0;
+
+	for (int number = start; number <= end; number++)
 	{
-		int32 value = testLock.TestRead();
-		cout << value << endl;
-		this_thread::sleep_for(1ms);
+		if (IsPrime(number))
+			count++;
 	}
+	return count;
 }
 int main()
 {
-	for (int32 i = 0; i < 2; i++)
+	const int MAX_NUMBER = 100'0000;
+
+	vector<thread> threads;
+	atomic<int> primeCount = 0;
+	int coreCount = thread::hardware_concurrency();
+	int jobCount = (MAX_NUMBER / coreCount) + 1;
+	for (int i = 0; i < coreCount; i++)
 	{
-		GThreadManager->Launch(ThreadWrite);
+		int start = (i * jobCount) + 1;
+		int end = min(MAX_NUMBER, ((i + 1) * jobCount));
+
+		threads.push_back(thread([start, end, &primeCount]()
+			{
+				primeCount += CountPrime(start, end);
+			}
+		));
+
+		
 	}
+	for (thread& t : threads)
+		t.join();
 
-	for (int32 i = 0; i < 5; i++)
-	{
-		GThreadManager->Launch(ThreadRead);
-	}
-
-	GThreadManager->Join();
-
+	cout << primeCount << endl;
 }
