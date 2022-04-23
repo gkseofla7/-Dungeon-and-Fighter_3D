@@ -9,17 +9,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameServer.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Thread_Atomic_2.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Thread_Lock_3.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="ThreadCreate_1.cpp">
-      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

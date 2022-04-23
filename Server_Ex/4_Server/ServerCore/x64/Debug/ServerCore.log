@@ -1,0 +1,9 @@
+﻿  pch.cpp
+  CoreGlobal.cpp
+  CorePch.cpp
+  CoreTLS.cpp
+  Lock.cpp
+C:\Users\DaerimHan\Desktop\Senior_Project\-Dungeon-and-Fighter_3D\Server_Ex\4_Server\ServerCore\Lock.cpp(23,32): warning C4804: '<': 연산에 'bool' 형식을 사용하는 것은 안전하지 않습니다.
+  ThreadManager.cpp
+  코드를 생성하고 있습니다...
+  ServerCore.vcxproj -> C:\Users\DaerimHan\Desktop\Senior_Project\-Dungeon-and-Fighter_3D\Server_Ex\4_Server\Libraries\Debug\ServerCore.lib
