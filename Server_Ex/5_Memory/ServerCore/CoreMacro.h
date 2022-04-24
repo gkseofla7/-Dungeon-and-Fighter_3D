@@ -11,6 +11,19 @@
 #define READ_LOCK				READ_LOCK_IDX(0)
 #define WRITE_LOCK_IDX(idx)		WriteLockGuard writeLockGuard_##idx(_locks[idx], typeid(this).name());//전처리단계에서 자동처리해줌
 #define WRITE_LOCK				WRITE_LOCK_IDX(0)
+
+/*-----------
+* Memory
+------------*/
+#ifdef _DEBUG
+#define _xalloc(size)	BaseAllocator::Alloc(size)
+#define _xrelease(ptr)	BaseAllocator::Release(ptr)
+
+#else
+#define _xalloc(size)	BaseAllocator::Alloc(size)
+#define _xrelease(ptr)	BaseAllocator::Release(ptr)
+#endif
+
 /*-----------
 * CRASH
 ------------*/

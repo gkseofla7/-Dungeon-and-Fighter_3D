@@ -29,7 +29,7 @@ public:
 	TSharedPtr() {}
 	TSharedPtr(T* ptr) { Set(ptr); }
 
-	//복사, 복사하는 과정에서 ref count 1 증가함
+	//복사, 복사하는 과정에서 ref count 1 증가함, 그래서 한 과정안에 끝나지 않아도 그 사이에 delete가 들어가도 삭제안돼서 상관없음
 	TSharedPtr(const TSharedPtr& rhs) { Set(rhs._ptr); }
 	//이동
 	TSharedPtr(TSharedPtr&& rhs) { _ptr = rhs._ptr; rhs._ptr = nullptr; }
