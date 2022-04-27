@@ -1,2 +1,5 @@
-﻿  Memory.cpp
-  ServerCore.vcxproj -> C:\Users\DaerimHan\Desktop\Senior_Project\-Dungeon-and-Fighter_3D\Server_Ex\6_Memory\Libraries\Debug\ServerCore.lib
+﻿  Allocator.cpp
+  CoreGlobal.cpp
+  Memory.cpp
+  코드를 생성하고 있습니다...
+  ServerCore.vcxproj -> C:\Users\DaerimHan\Desktop\Senior_Project\-Dungeon-and-Fighter_3D\Server_Ex\7_Memory\Libraries\Debug\ServerCore.lib

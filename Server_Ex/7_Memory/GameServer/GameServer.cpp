@@ -17,32 +17,39 @@
 class Knight
 {
 public:
-	Knight()
-	{
-		cout << "Knight()" << endl;
-	}
-
-	Knight(int32 hp) :_hp(hp)
-	{
-		cout << "Knight(hp)" << endl;
-	}
-
-	~Knight()
-	{
-		cout << "~Knight()" << endl;
-	}
-
-
-	int32 _hp = 100;
-	int32 _mp = 10;;
+	int32 _hp = rand() % 100;
 };
 
-
-
+class Monster
+{
+public:
+	int64 _id = 0;
+};
 int main()
 {
-	//다양한 STL Container 사용, 여기 내부에서는 new, delete를 사용하고 있음
-	//Vector<Knight> v(100);
+	//Knight* k = ObjectPool<Knight>::Pop();
+
+	//ObjectPool<Knight>::Push(k);
+
+	//위에서는 보다시피 포인터 관리를 알아서 해야됨..
+	//shared_ptr 사용하면? 일반 new, delete를 사용해서 다른걸 사용
+	// shared_ptr<Knight> sptr ={ ObjectPool<Knight>::Pop(), ObjectPool<Knight>::Push };
+	//shared_ptr<Knight> sptr = ObjectPool<Knight>::MakeShared();
+	// 위 방법보다 이방법으로 사용
+
+	Knight* knights[100];
+
+	for (int32 i = 0; i < 100; i++)
+		knights[i] = ObjectPool<Knight>::Pop();
+
+	for (int32 i = 0; i < 100; i++)
+	{
+		ObjectPool<Knight>::Push(knights[i]);
+		knights[i] = nullptr;
+	}
+
+	shared_ptr<Knight> sptr = ObjectPool<Knight>::MakeShared();//오브젝트풀
+	shared_ptr<Knight> sptr2 = MakeShared<Knight>();//얘는 메모리풀
 
 	for (int32 i = 0; i < 5; i++)
 	{
@@ -50,36 +57,20 @@ int main()
 			{
 				while (true)
 				{
-					Vector<Knight> v(10);
+					Knight* knight = xnew<Knight>();
 
-					Map<int32, Knight> m;
+					cout << knight->_hp << endl;
 
-					m[100] = Knight();
 					this_thread::sleep_for(10ms);
+
+					xdelete(knight);
 				}
-			}
-		);
+			});
 	}
 
 	GThreadManager->Join();
 }
 
-//STomp Allocator
-////SYSTEM_INFO info;
-////::GetSystemInfo(&info);
-////
-////info.dwPageSize;//paging size 가져옴, 아마 4kB
-////info.dwAllocationGranularity;//메모리를 할당할때 이 숫자의 배수로 주소를 할당해줌, 64kB
-//
-////int * test = (int*)::VirtualAlloc(NULL, 4, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);//처음인자 알아서 메모리 할장해줘, 4바이트, 예약과 할당을 같이해서 바로 사용가능
-////	//Read Write, new연산자 사용안하고 메모리 할당, delete는 효율성을 위해 바로 날리지 않음
-////*test = 100;
-////::VirtualFree(test, 0, MEM_RELEASE);
-//////왜 new, delete 연산자 안쓰고? 크래시남!
-//Knight* knight = xnew<Knight>(10);
-//
-//xdelete(knight);
-//
-//knight->_hp = 100;
+
 
 
