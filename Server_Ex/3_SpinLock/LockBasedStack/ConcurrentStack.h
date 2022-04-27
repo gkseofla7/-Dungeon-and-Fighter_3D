@@ -62,7 +62,6 @@ class LockFreeStack
 		Node(const T& Value) : data(Value), next(nullptr)
 		{
 
-
 		}
 		T data;
 		Node* next;
@@ -142,7 +141,7 @@ public:
 
 			// 이왕 혼자인거, 삭제 예약된 다른 데이터들도 삭제
 			Node* node = _pendingList.exchange(nullptr);
-
+			//아주 그냥 list 를 통째로 보내버림
 			if (--_popCount == 0)//popCount자체가 atomic해서 --는 atomic하게 실행됨
 			{
 				// 끼어든 애가 없음 -> 삭제 진행

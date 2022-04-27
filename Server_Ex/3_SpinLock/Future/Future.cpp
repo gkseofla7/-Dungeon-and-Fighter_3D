@@ -6,7 +6,7 @@
 #include <future>
 using namespace std;
 
-//조금더 가벼운 상황에서이벤트로 알려줌
+//조금더 가벼운 상황에서 이벤트로 알려줌
 //미래 객체가 뭔지!
 
 __int64 Calculate()
