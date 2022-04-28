@@ -60,7 +60,8 @@ int main()
 		char sendBuffer[100] = "Hello Wolrd";
 		for (int32 i = 0; i < 10; i++)
 		{
-			int32 resultCode = ::send(clientSocket, sendBuffer, sizeof(sendBuffer), 0);//마지막 인자는 0
+			int32 resultCode = ::send(clientSocket, sendBuffer, sizeof(sendBuffer), 0);
+			//마지막 인자는 0
 			if (resultCode == SOCKET_ERROR)
 			{
 				int32 errCode = ::WSAGetLastError();//어떤 이유로?
