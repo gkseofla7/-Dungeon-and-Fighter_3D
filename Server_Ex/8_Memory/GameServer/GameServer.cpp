@@ -22,43 +22,63 @@ class Player
 public:
 	Player()
 	{
-		INIT_TL(Player)
+		INIT_TL(Player);
 	}
-	virtual ~Player()
-	{}
+	virtual ~Player() { }
+
 	DECLARE_TL
 };
-class Knight: public Player
+
+class Knight : public Player
 {
 public:
-	Knight() { INIT_TL(Knight) }
-	
-	int _typeId;
+	Knight() { INIT_TL(Knight); }
 };
 
 class Mage : public Player
 {
+
 public:
 	Mage() { INIT_TL(Mage); }
-	int _typeId;
 };
+
 class Archer : public Player
 {
+
 public:
-	int _typeId;
+	Archer() { INIT_TL(Archer) }
 };
+
 class Dog
 {
 
 };
-class Monster
-{
-public:
-	int64 _id = 0;
-};
 
 int main()
 {
+	//TypeList<Mage, Knight>::Head whoAMI;
+	//TypeList<Mage, Knight>::Tail whoAMI2;
+
+	//TypeList<Mage, TypeList<Knight, Archer>>::Head whoAMI3;
+	//TypeList<Mage, TypeList<Knight, Archer>>::Tail::Head whoAMI4;
+	//TypeList<Mage, TypeList<Knight, Archer>>::Tail::Tail whoAMI5;
+
+	//int32 len1 = Length<TypeList<Mage, Knight>>::value;
+	//int32 len2 = Length<TypeList<Mage, Knight, Archer>>::value;
+	//
+	//
+	//// 3*3 
+	//TypeAt<TL, 0>::Result whoAMI6;
+	//TypeAt<TL, 1>::Result whoAMI7;
+	//TypeAt<TL, 2>::Result whoAMI8;
+
+	//int32 index1 = IndexOf<TL, Mage>::value;
+	//int32 index2 = IndexOf<TL, Archer>::value;
+	//int32 index3 = IndexOf<TL, Dog>::value;
+
+	//bool canConvert1 = Conversion<Player, Knight>::exists;
+	//bool canConvert2 = Conversion<Knight, Player>::exists;
+	//bool canConvert3 = Conversion<Knight, Dog>::exists;
 
 	{
 		Player* player = new Knight();
@@ -66,33 +86,27 @@ int main()
 		bool canCast = CanCast<Knight*>(player);
 		Knight* knight = TypeCast<Knight*>(player);
 
+
 		delete player;
 	}
 
 	{
-		shared_ptr<Knight> knight = MakeShared<Knight>();
+		shared_ptr<Player> player = MakeShared<Knight>();
 
-		shared_ptr<Player> player = TypeCast<Player>(knight);
-		bool canCast =  CanCast<Mage>(player);
+		shared_ptr<Archer> archer = TypeCast<Archer>(player);
+		bool canCast = CanCast<Mage>(player);
+
 	}
 
-	TypeConversion<TL> test;
-	test.s_convert[0][0];
 	for (int32 i = 0; i < 5; i++)
 	{
 		GThreadManager->Launch([]()
 			{
 				while (true)
 				{
-
 				}
 			});
 	}
 
 	GThreadManager->Join();
-
 }
-
-
-
-
