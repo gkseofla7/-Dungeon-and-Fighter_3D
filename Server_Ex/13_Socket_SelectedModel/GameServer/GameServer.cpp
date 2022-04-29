@@ -43,7 +43,7 @@ int main()
 	// 블로킹(Blocking) 막음
 	// accept -> 접속한 클라가 있을 때
 	// connect -> 클라가 서버 접속 성공했을 때
-	// send, sendto -> 요청한 데이터를 송신 버퍼에 복사햇을 때
+	// send, sendto -> 요청한 데이터를 송신 버퍼에 복사했을 때
 	// recv, recvfrom -> 수신 버퍼에 도착한 데이터가 있고, 이를 유저 레벨 버퍼에 복사했을 때
 	
 	// 논블로킹(Non-Blocking) 막지않음
@@ -87,13 +87,13 @@ int main()
 	// 3) 적어도 하나의 소켓이 준비되면 리턴 -> 낙오자는 알아서 제거됨
 	// 예로 읽기 셋에 1, 2, 3소켓이 있는데 2번 소켓에 데이터가 들어와서 수신버퍼가 찼다고 하면
 	// 바로 select가 반환해서 준비된 개수를 반환 (즉 2번만 준비 됐으니 1개 반환)
-	// 그리고 set 안에 다 삭제됨, 이제 2번만 확인
+	// 그리고 set 안에 다 삭제됨(2번빼고), 이제 2번만 확인
 	// 4) 남은 소켓 체크해서 진행
 
 	// fd_set set;
-	// FD_SERO : 비운다
+	// FD_ZERO : 비운다
 	// ex) FD_ZERO(set)
-	// FD)SET : 소켓 s를 넣는다
+	// FD_SET : 소켓 s를 넣는다
 	// ex) FD_SET(s, &set);
 	// FD_CLR : 소켓 s를 제거
 	// ex) FD_CLR(s, &set);
@@ -112,7 +112,7 @@ int main()
 		FD_ZERO(&writes);
 
 		// ListenSocket 등록
-		FD_SET(listenSocket, &reads);//accept할게 있는지 확인
+		FD_SET(listenSocket, &reads);//accept할게 있는지 확인하는 소켓
 
 		// 소켓 등록
 		for (Session& s : sessions)
@@ -129,6 +129,8 @@ int main()
 		//timeout.tv_sec;
 		//timeout.tv_usec;
 		int32 retVal = ::select(0, &reads, &writes, nullptr, nullptr);//처음껀 일단 0
+		//select는 동기함수
+		
 		if (retVal == SOCKET_ERROR)
 			break;
 
@@ -190,3 +192,4 @@ int main()
 	// 윈속 종료
 	::WSACleanup();
 } 
+//단점.. FD_SETSIZE 즉 fd_set 크기가 너무 작음 즉 여러개 받아줄려면 여러개 만들어 줘야됨
